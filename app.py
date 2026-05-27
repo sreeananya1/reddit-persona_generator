@@ -53,7 +53,26 @@ def fetch_user_content(username, limit=20):
 # -----------------------------
 # AI PERSONA ENGINE (FIXED)
 # -----------------------------
+def detect_topic(text):
+    text = text.lower()
 
+    if any(word in text for word in ["movie", "film", "hollywood", "actor", "cinema"]):
+        return "entertainment"
+
+    elif any(word in text for word in ["stock", "money", "finance", "investment", "crypto"]):
+        return "finance"
+
+    elif any(word in text for word in ["code", "python", "developer", "ai", "data"]):
+        return "tech"
+
+    elif any(word in text for word in ["sport", "cricket", "football", "game"]):
+        return "sports"
+
+    else:
+        return "general"
+    
+
+    
 def generate_persona(content):
     text = " ".join(content)
 
