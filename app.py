@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import requests
+import random
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -52,53 +53,59 @@ def fetch_user_content(username, limit=20):
 # -----------------------------
 # AI PERSONA ENGINE (FIXED)
 # -----------------------------
+
 def generate_persona(content):
+    text = " ".join(content)
 
-    profiles = {
-        "Software Development": "python code backend flask django api development software",
-        "AI & Data Science": "machine learning ai data model neural network prediction",
-        "Finance & Investing": "stock crypto trading finance investment money market",
-        "Gaming": "gaming fps esports stream playstation xbox pc games"
+    topic = detect_topic(text)
+
+    personas = {
+        "entertainment": {
+            "interests": "Movies, Celebrity Culture, Cinema",
+            "personality": "Expressive, creative, emotionally driven",
+            "writing_style": "Casual and expressive",
+            "summary": "A pop-culture enthusiast who enjoys films and entertainment content."
+        },
+
+        "finance": {
+            "interests": "Investing, Stocks, Crypto, Financial Growth",
+            "personality": "Analytical, risk-aware, strategic",
+            "writing_style": "Logical and data-driven",
+            "summary": "A finance-focused thinker interested in wealth building and investments."
+        },
+
+        "tech": {
+            "interests": "Programming, AI, Data Science, Software Development",
+            "personality": "Logical, curious, problem-solver",
+            "writing_style": "Technical and structured",
+            "summary": "A tech enthusiast passionate about coding and AI systems."
+        },
+
+        "sports": {
+            "interests": "Sports, Fitness, Competition",
+            "personality": "Energetic, competitive, disciplined",
+            "writing_style": "Direct and enthusiastic",
+            "summary": "A sports-oriented personality driven by competition and activity."
+        },
+
+        "general": {
+            "interests": "General knowledge, browsing, mixed interests",
+            "personality": "Balanced, curious, open-minded",
+            "writing_style": "Simple and neutral",
+            "summary": "A general user with mixed interests across domains."
+        }
     }
 
-    documents = content
-    all_docs = documents + list(profiles.values())
+    base = personas[topic]
 
-    vectorizer = TfidfVectorizer(stop_words="english")
-    vectors = vectorizer.fit_transform(all_docs)
+    # add small variation so it doesn't feel identical
+    base["writing_style"] += random.choice([
+        " with slight personal tone.",
+        " with structured clarity.",
+        " with expressive explanation style."
+    ])
 
-    doc_vectors = vectors[:len(documents)]
-    profile_vectors = vectors[len(documents):]
-
-    scores = {}
-
-    for i, key in enumerate(profiles.keys()):
-        sim = cosine_similarity(doc_vectors, profile_vectors[i]).mean()
-        scores[key] = float(sim)
-
-    sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-
-    dominant = sorted_scores[0][0]
-    second = sorted_scores[1][0]
-
-    activity_map = {
-        "Software Development": "Builder 🛠️",
-        "AI & Data Science": "Learner 📚",
-        "Finance & Investing": "Investor 💰",
-        "Gaming": "Gamer 🎮"
-    }
-
-    confidence = min(100, int(sorted_scores[0][1] * 120))
-
-    return {
-        "interests": f"{dominant}, {second}",
-        "dominant": dominant,
-        "activity": activity_map.get(dominant, "Explorer"),
-        "personality": "AI-based behavioral inference",
-        "writing_style": "Analyzed from text patterns",
-        "summary": f"Strong alignment with {dominant}, secondary interest in {second}.",
-        "confidence": f"{confidence}%"
-    }
+    return base
 
 
 # -----------------------------
