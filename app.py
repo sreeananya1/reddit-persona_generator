@@ -113,21 +113,25 @@ def generate_persona(content):
 # -----------------------------
 @app.route("/", methods=["GET", "POST"])
 def home():
+    try:
+        if request.method == "POST":
 
-    if request.method == "POST":
+            username = request.form["username"]
 
-        username = request.form["username"]
+            content, error = fetch_user_content(username)
 
-        content, error = fetch_user_content(username)
+            persona = generate_persona(content)
 
-        if error:
-            return f"Error: {error}"
+            return render_template(
+                "result.html",
+                username=username,
+                persona=persona
+            )
 
-        persona = generate_persona(content)
+        return render_template("index.html")
 
-        return render_template("result.html", username=username, persona=persona)
-
-    return render_template("index.html")
+    except Exception as e:
+        return f"ERROR OCCURRED: {str(e)}"
 
 
 # -----------------------------
