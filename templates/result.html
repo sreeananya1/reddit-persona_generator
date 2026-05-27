@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Persona Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f4f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 700px;
+            margin: 40px auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #ff4500;
+        }
+
+        .card {
+            background: white;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .text {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: white;
+        }
+
+        .tech { background: #007bff; }
+        .finance { background: #28a745; }
+        .gaming { background: #6f42c1; }
+        .general { background: #6c757d; }
+
+        .bar-container {
+            background: #e9ecef;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 18px;
+        }
+
+        .bar {
+            height: 18px;
+            background: #ff4500;
+            width: 50%;
+        }
+
+        .button {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        a {
+            text-decoration: none;
+            background: #ff4500;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+        }
+
+        a:hover {
+            background: #e03d00;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>AI Persona Dashboard</h1>
+        <p>User: <b>{{ username }}</b></p>
+    </div>
+
+    <!-- CONFIDENCE -->
+    <div class="card">
+        <div class="section-title">AI Confidence Score</div>
+
+        <div class="bar-container">
+            <div class="bar" style="width: {{ persona.confidence }}"></div>
+        </div>
+
+        <p class="text">{{ persona.confidence }}</p>
+    </div>
+
+    <!-- ACTIVITY TYPE -->
+    <div class="card">
+        <div class="section-title">Activity Type</div>
+        <span class="badge tech">{{ persona.activity }}</span>
+    </div>
+
+    <!-- INTERESTS -->
+    <div class="card">
+        <div class="section-title">Top Interests</div>
+
+        <div class="badges">
+            {% for interest in persona.interests.split(",") %}
+                <span class="badge tech">{{ interest }}</span>
+            {% endfor %}
+        </div>
+        <div class="card">
+    <div class="section-title">Dominant Trait</div>
+    <span class="badge tech">{{ persona.dominant }}</span>
+</div>
+    </div>
+
+    <!-- PERSONALITY -->
+    <div class="card">
+        <div class="section-title">Personality</div>
+        <p class="text">{{ persona.personality }}</p>
+    </div>
+
+    <!-- WRITING STYLE -->
+    <div class="card">
+        <div class="section-title">Writing Style</div>
+        <p class="text">{{ persona.writing_style }}</p>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="card">
+        <div class="section-title">AI Summary Insight</div>
+        <p class="text">{{ persona.summary }}</p>
+    </div>
+
+    <!-- BUTTON -->
+    <div class="button">
+        <a href="/">Analyze Another User</a>
+    </div>
+
+</div>
+
+</body>
+</html>

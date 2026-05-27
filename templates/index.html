@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reddit Persona Generator</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        .container {
+            background: white;
+            width: 400px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #ff4500;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background: #ff4500;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #e03d00;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Reddit Persona Generator</h1>
+
+        <p>Analyze Reddit users with AI</p>
+
+        <form method="POST">
+            <input
+                type="text"
+                name="username"
+                placeholder="Enter Reddit Username"
+                required
+            >
+
+            <br>
+
+            <button type="submit">
+                Analyze
+            </button>
+        </form>
+    </div>
+
+</body>
+</html>
