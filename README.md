@@ -1,58 +1,47 @@
-Reddit Persona Generator
+# 🤖 Reddit Persona Generator
 
-A web application built using Flask that generates personality-style insights from a Reddit username.
+An AI-inspired web application that generates personality insights from Reddit usernames.
 
-The project explores persona generation concepts through a simple end-to-end application with a clean interface and live deployment.
-
-Live Website
-
+## 🚀 Live Demo
 https://reddit-persona-generator-vofs.onrender.com/
 
+---
 
-01 — Features
+## 📌 Features
 
-1. Enter a Reddit username
-2. Generate personality-style insights
-3. View interests and writing style
-4. Get a short behavioral summary
-5. Clean UI with separate analysis page
-6. Deployed online using Render
+- Generate personality summaries
+- Identify interests and behavioral traits
+- Clean AI-style dashboard UI
+- Flask-based web application
+- Live deployment using Render
 
+---
 
-02 — Tech Stack
+## 🛠 Tech Stack
 
-Python  
-Flask  
-HTML  
-CSS  
-Render
+- Python
+- Flask
+- HTML
+- CSS
+- NLP-inspired persona generation
+- Render Deployment
 
+---
 
-03 — Run the Project
+## 📸 Screenshots
 
-Step 1: Clone repository
+### Homepage
+![Homepage](screenshots/homepage.png)
 
-git clone YOUR_GITHUB_REPO_LINK
+### Results Page
+![Results](screenshots/result-pg1.png)
+![Results](screenshots/result-pg2.png)
 
+---
 
-Step 2: Install dependencies
+## ⚙️ Installation
 
-pip install -r requirements.txt
+Clone the repository:
 
-
-Step 3: Run application
-
-python app.py
-
-
-Step 4: Open browser
-
-http://127.0.0.1:5000/
-
-
-04 — Project Goal
-
-This project was built to practice Flask backend development, improve UI structuring, and understand how personality-style analysis systems can be designed and deployed as a web application.
-
-
-Built by Sree Ananya
+```bash
+git clone https://github.com/sreeananya1/reddit-persona_generator
