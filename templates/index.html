@@ -4,71 +4,107 @@
     <title>Reddit Persona Generator</title>
 
     <style>
-        body {
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-            padding-top: 80px;
         }
 
-        .container {
-            background: white;
-            width: 400px;
-            margin: auto;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+        body{
+            background: linear-gradient(135deg, #ff4500, #ff7b54);
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
         }
 
-        h1 {
-            color: #ff4500;
+        .container{
+            background:white;
+            width:450px;
+            padding:40px;
+            border-radius:20px;
+            box-shadow:0px 8px 25px rgba(0,0,0,0.2);
+            text-align:center;
         }
 
-        input {
-            width: 80%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #ccc;
+        h1{
+            color:#ff4500;
+            margin-bottom:10px;
+            font-size:32px;
         }
 
-        button {
-            background: #ff4500;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
+        p{
+            color:#666;
+            margin-bottom:30px;
         }
 
-        button:hover {
-            background: #e03d00;
+        input{
+            width:100%;
+            padding:15px;
+            border:2px solid #ddd;
+            border-radius:12px;
+            font-size:16px;
+            outline:none;
+            margin-bottom:20px;
+        }
+
+        input:focus{
+            border-color:#ff4500;
+        }
+
+        button{
+            width:100%;
+            padding:15px;
+            border:none;
+            border-radius:12px;
+            background:#ff4500;
+            color:white;
+            font-size:18px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        button:hover{
+            background:#e63d00;
+        }
+
+        .footer{
+            margin-top:20px;
+            font-size:14px;
+            color:#888;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
-        <h1>Reddit Persona Generator</h1>
+<div class="container">
 
-        <p>Analyze Reddit users with AI</p>
+    <h1>🤖 Reddit Persona Generator</h1>
 
-        <form method="POST">
-            <input
-                type="text"
-                name="username"
-                placeholder="Enter Reddit Username"
-                required
-            >
+    <p>Analyze Reddit personalities with AI-powered insights</p>
 
-            <br>
+    <form method="POST">
 
-            <button type="submit">
-                Analyze
-            </button>
-        </form>
+        <input
+            type="text"
+            name="username"
+            placeholder="Enter Reddit Username"
+            required
+        >
+
+        <button type="submit">
+            Analyze Persona
+        </button>
+
+    </form>
+
+    <div class="footer">
+        Built using Python + Flask
     </div>
+
+</div>
 
 </body>
 </html>
