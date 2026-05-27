@@ -12,53 +12,67 @@
         }
 
         body{
-            background: linear-gradient(135deg, #ff4500, #ff7b54);
+            background: linear-gradient(135deg, #0f172a, #1e293b);
             height:100vh;
             display:flex;
             justify-content:center;
             align-items:center;
+            color:white;
         }
 
         .container{
-            background:white;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
             width:450px;
-            padding:40px;
-            border-radius:20px;
-            box-shadow:0px 8px 25px rgba(0,0,0,0.2);
+            padding:45px;
+            border-radius:24px;
+            box-shadow:0px 10px 30px rgba(0,0,0,0.3);
             text-align:center;
+            border:1px solid rgba(255,255,255,0.1);
         }
 
         h1{
-            color:#ff4500;
-            margin-bottom:10px;
-            font-size:32px;
+            font-size:34px;
+            margin-bottom:15px;
+        }
+
+        .highlight{
+            color:#60a5fa;
         }
 
         p{
-            color:#666;
+            color:#cbd5e1;
             margin-bottom:30px;
+            line-height:1.6;
         }
 
         input{
             width:100%;
-            padding:15px;
-            border:2px solid #ddd;
-            border-radius:12px;
+            padding:16px;
+            border:none;
+            border-radius:14px;
             font-size:16px;
-            outline:none;
             margin-bottom:20px;
+            outline:none;
+            background:#1e293b;
+            color:white;
+            border:1px solid #334155;
+        }
+
+        input::placeholder{
+            color:#94a3b8;
         }
 
         input:focus{
-            border-color:#ff4500;
+            border:1px solid #60a5fa;
         }
 
         button{
             width:100%;
-            padding:15px;
+            padding:16px;
             border:none;
-            border-radius:12px;
-            background:#ff4500;
+            border-radius:14px;
+            background:#2563eb;
             color:white;
             font-size:18px;
             cursor:pointer;
@@ -66,13 +80,13 @@
         }
 
         button:hover{
-            background:#e63d00;
+            background:#1d4ed8;
         }
 
         .footer{
-            margin-top:20px;
+            margin-top:25px;
             font-size:14px;
-            color:#888;
+            color:#94a3b8;
         }
     </style>
 </head>
@@ -81,9 +95,13 @@
 
 <div class="container">
 
-    <h1>🤖 Reddit Persona Generator</h1>
+    <h1>
+        🤖 <span class="highlight">Reddit Persona</span> Generator
+    </h1>
 
-    <p>Analyze Reddit personalities with AI-powered insights</p>
+    <p>
+        Generate personality insights, interests, and behavioral summaries from Reddit profiles.
+    </p>
 
     <form method="POST">
 
@@ -101,7 +119,7 @@
     </form>
 
     <div class="footer">
-        Built using Python + Flask
+        Powered by Python • Flask • NLP
     </div>
 
 </div>
