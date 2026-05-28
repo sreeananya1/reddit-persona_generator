@@ -1,126 +1,264 @@
 from flask import Flask, render_template, request
 import requests
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+from groq import Groq
+import os
+from dotenv import load_dotenv
+
+# -----------------------------
+# LOAD ENV
+# -----------------------------
+load_dotenv()
+
+# -----------------------------
+# GROQ API
+# -----------------------------
+client = Groq(
+    api_key=os.getenv("GROQ_API_KEY")
+)
 
 app = Flask(__name__)
 
+
 # -----------------------------
-# REDDIT FETCH (NO API KEY)
+# REDDIT FETCH
 # -----------------------------
 def fetch_user_content(username, limit=20):
 
-    headers = {"User-Agent": "Mozilla/5.0"}
+    headers = {
+        "User-Agent": "RedditPersonaBot/1.0"
+    }
+
     texts = []
 
     try:
-        c_url = f"https://www.reddit.com/user/{username}/comments.json?limit={limit}"
-        c_res = requests.get(c_url, headers=headers)
+
+        # COMMENTS
+        comments_url = (
+            f"https://www.reddit.com/user/"
+            f"{username}/comments/.json?limit={limit}"
+        )
+
+        c_res = requests.get(
+            comments_url,
+            headers=headers,
+            timeout=10
+        )
+
+        
 
         if c_res.status_code == 200:
-            try:
-                data = c_res.json()
-                for item in data.get("data", {}).get("children", []):
-                    body = item["data"].get("body", "")
-                    if body:
-                        texts.append(body)
-            except:
-                pass
 
-        p_url = f"https://www.reddit.com/user/{username}/submitted.json?limit={limit}"
-        p_res = requests.get(p_url, headers=headers)
+            data = c_res.json()
+
+            for item in data.get(
+                "data", {}
+            ).get("children", []):
+
+                body = item["data"].get(
+                    "body", ""
+                )
+
+                if body:
+                    texts.append(body)
+
+        # POSTS
+        posts_url = (
+            f"https://www.reddit.com/user/"
+            f"{username}/submitted/.json?limit={limit}"
+        )
+
+        p_res = requests.get(
+            posts_url,
+            headers=headers,
+            timeout=10
+        )
+
+        
 
         if p_res.status_code == 200:
-            try:
-                data = p_res.json()
-                for item in data.get("data", {}).get("children", []):
-                    title = item["data"].get("title", "")
-                    selftext = item["data"].get("selftext", "")
-                    texts.append(title + " " + selftext)
-            except:
-                pass
+
+            data = p_res.json()
+
+            for item in data.get(
+                "data", {}
+            ).get("children", []):
+
+                title = item["data"].get(
+                    "title", ""
+                )
+
+                selftext = item["data"].get(
+                    "selftext", ""
+                )
+
+                combined = (
+                    f"{title} {selftext}"
+                ).strip()
+
+                if combined:
+                    texts.append(combined)
+
 
         if not texts:
-            return ["No data found"], None
+            return [
+                "User has limited or private Reddit activity."
+            ], None
 
         return texts, None
 
     except Exception as e:
+        
         return None, str(e)
 
 
 # -----------------------------
-# AI PERSONA ENGINE (FIXED)
+# AI PERSONA ENGINE
 # -----------------------------
+
 def generate_persona(content):
 
-    profiles = {
-        "Software Development": "python code backend flask django api development software",
-        "AI & Data Science": "machine learning ai data model neural network prediction",
-        "Finance & Investing": "stock crypto trading finance investment money market",
-        "Gaming": "gaming fps esports stream playstation xbox pc games"
-    }
+    text_data = "\n".join(content[:40])
 
-    documents = content
-    all_docs = documents + list(profiles.values())
+    prompt = f"""
+    Analyze this Reddit user's activity.
 
-    vectorizer = TfidfVectorizer(stop_words="english")
-    vectors = vectorizer.fit_transform(all_docs)
+    Reddit content:
+    {text_data}
 
-    doc_vectors = vectors[:len(documents)]
-    profile_vectors = vectors[len(documents):]
+    Return ONLY this exact format:
 
-    scores = {}
+    Interests: <short answer>
 
-    for i, key in enumerate(profiles.keys()):
-        sim = cosine_similarity(doc_vectors, profile_vectors[i]).mean()
-        scores[key] = float(sim)
+    Personality: <short answer>
 
-    sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    Writing Style: <short answer>
 
-    dominant = sorted_scores[0][0]
-    second = sorted_scores[1][0]
+    Summary: <2-3 sentence realistic summary>
 
-    activity_map = {
-        "Software Development": "Builder 🛠️",
-        "AI & Data Science": "Learner 📚",
-        "Finance & Investing": "Investor 💰",
-        "Gaming": "Gamer 🎮"
-    }
+    Keep answers short and evidence-based.
+    """
 
-    confidence = min(100, int(sorted_scores[0][1] * 120))
+    try:
 
-    return {
-        "interests": f"{dominant}, {second}",
-        "dominant": dominant,
-        "activity": activity_map.get(dominant, "Explorer"),
-        "personality": "AI-based behavioral inference",
-        "writing_style": "Analyzed from text patterns",
-        "summary": f"Strong alignment with {dominant}, secondary interest in {second}.",
-        "confidence": f"{confidence}%"
-    }
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.5
+        )
 
+        result = response.choices[0].message.content
+
+
+        persona = {
+            "interests": "",
+            "personality": "",
+            "writing_style": "",
+            "summary": ""
+        }
+
+        lines = result.split("\n")
+
+        for line in lines:
+
+            clean = (
+                line.replace("*", "")
+                .strip()
+            )
+
+            if clean.lower().startswith("interests:"):
+                persona["interests"] = (
+                    clean.split(":", 1)[1]
+                    .strip()
+                )
+
+            elif clean.lower().startswith("personality:"):
+                persona["personality"] = (
+                    clean.split(":", 1)[1]
+                    .strip()
+                )
+
+            elif clean.lower().startswith("writing style:"):
+                persona["writing_style"] = (
+                    clean.split(":", 1)[1]
+                    .strip()
+                )
+
+            elif clean.lower().startswith("summary:"):
+                persona["summary"] = (
+                    clean.split(":", 1)[1]
+                    .strip()
+                )
+
+        # fallback values
+        if not persona["interests"]:
+            persona["interests"] = "Not enough data"
+
+        if not persona["personality"]:
+            persona["personality"] = "Not enough data"
+
+        if not persona["writing_style"]:
+            persona["writing_style"] = "Not enough data"
+
+        if not persona["summary"]:
+            persona["summary"] = result
+
+        return persona
+
+    except Exception as e:
+
+        return {
+            "interests": "Unavailable",
+            "personality": "Unavailable",
+            "writing_style": "Unavailable",
+            "summary": f"Error: {str(e)}"
+        }
 
 # -----------------------------
-# FLASK ROUTE
+# HOME ROUTE
 # -----------------------------
-@app.route("/", methods=["GET", "POST"])
+@app.route(
+    "/",
+    methods=["GET", "POST"]
+)
 def home():
 
     if request.method == "POST":
 
-        username = request.form["username"]
+        username = request.form[
+            "username"
+        ]
 
-        content, error = fetch_user_content(username)
+        content, error = (
+            fetch_user_content(
+                username
+            )
+        )
 
         if error:
-            return f"Error: {error}"
+            return (
+                f"Error: {error}"
+            )
 
-        persona = generate_persona(content)
+        persona = (
+            generate_persona(
+                content
+            )
+        )
 
-        return render_template("result.html", username=username, persona=persona)
+        return render_template(
+            "result.html",
+            username=username,
+            persona=persona
+        )
 
-    return render_template("index.html")
+    return render_template(
+        "index.html"
+    )
 
 
 # -----------------------------
